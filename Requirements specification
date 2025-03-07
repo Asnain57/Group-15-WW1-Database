@@ -6,6 +6,9 @@ Team Expertise
 Rationale of Topic Choice
 
 Literature Review
+The preservation of World War One data is the focus of several initiatives, including Findmypast, which offers accessible military information, and the Commonwealth War Graves Commission (CWGC). While these platforms supply a lot of data, they are broad in scope and often require paid access, unlike the proposed Bradford WW1 application, which will focus on local data and provide open access.
+Relational databases like MySQL and PostgreSQL are used by many historical archives, like The Digital Public Library of America (DPLA), to manage their records. Because of its ease of use and capacity to manage the anticipated volume of data, SQLite was selected for this project. The organised data storage of military records, memorials, and associated historical data will be supported by this DBMS.
+Flask was chosen for the web application because it is scalable and lightweight. Database-driven apps can be developed quickly with Flask. Platforms like as Europeana provide useful insights on designing user-friendly, accessible archive interfaces. For both public and admin users, features like search, filtering, and navigation will be essential to guaranteeing a user-friendly experience.
 
 Functional and Non-Functional Requirements
 Functional Requirements
