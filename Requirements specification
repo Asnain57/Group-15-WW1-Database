@@ -4,8 +4,10 @@ The goal of the WW1 Bradford Database project is to conserve and grow the histor
 
 Team Expertise:
 Our team are familiar with the following languages: Python, HTML and CSS – this expertise mainly comes from our place at University of Bradford and previous education. We have used HTML to make a website and paired with CSS we designed it to our desire. Our team also have great communication with one another meaning we will be able to assign work individually effectively – and combined with the punctuality we can function efficiently.
+
 Rationale of Topic Choice:
 The aim of this project is to preserve and make available the historical documents regarding Bradford's participation in World War I. Bradford has a long history of aiding in the war effort, and learning about the local past requires an awareness of many of its soldiers, graves, and memorials. The establishment of this database will act as a digital hub for the public, genealogists, and researchers to examine these historical documents. By making important data that is currently scattered and hard to access easily accessible, the project helps to preserve Bradford's WWI history for future generations.
+
 Literature Review:
 The preservation of World War One data is the focus of several initiatives, including Findmypast, which offers accessible military information, and the Commonwealth War Graves Commission (CWGC). While these platforms supply a lot of data, they are broad in scope and often require paid access, unlike the proposed Bradford WW1 application, which will focus on local data and provide open access.
 Relational databases like MySQL and PostgreSQL are used by many historical archives, like The Digital Public Library of America (DPLA), to manage their records. Because of its ease of use and capacity to manage the anticipated volume of data, SQLite was selected for this project. The organised data storage of military records, memorials, and associated historical data will be supported by this DBMS.
