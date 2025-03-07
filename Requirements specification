@@ -1,29 +1,34 @@
 Requirements Specification Document
-Introduction
+Introduction:
 
-Team Expertise
+Team Expertise:
 
-Rationale of Topic Choice
+Rationale of Topic Choice:
 
-Literature Review
+Literature Review:
 The preservation of World War One data is the focus of several initiatives, including Findmypast, which offers accessible military information, and the Commonwealth War Graves Commission (CWGC). While these platforms supply a lot of data, they are broad in scope and often require paid access, unlike the proposed Bradford WW1 application, which will focus on local data and provide open access.
 Relational databases like MySQL and PostgreSQL are used by many historical archives, like The Digital Public Library of America (DPLA), to manage their records. Because of its ease of use and capacity to manage the anticipated volume of data, SQLite was selected for this project. The organised data storage of military records, memorials, and associated historical data will be supported by this DBMS.
 Flask was chosen for the web application because it is scalable and lightweight. Database-driven apps can be developed quickly with Flask. Platforms like as Europeana provide useful insights on designing user-friendly, accessible archive interfaces. For both public and admin users, features like search, filtering, and navigation will be essential to guaranteeing a user-friendly experience.
 
-Functional and Non-Functional Requirements
+Functional and Non-Functional Requirements:
 Functional Requirements
+User Authentication: Users will be able to log in as either guests (read-only access) or admins (full access to create, edit, and delete entries) once the system has implemented user authentication. Both admin and guest logins will be protected by passwords.
+Database: Ability to search, add, edit, and delete records.
+User Interface: There will be clear navigation choices to access each database section, and the interface will be easy to use. Navigation through the database and search results will be made easier with the usage of buttons like Next, previous and close.
+Search Functionality A variety of fields, including surname, regiment, monument location, and more, will allow users to search the database. The search results will enhance performance and usability.
 
 Non-Functional Requirements
+Usability: Users with no technical skills will be able to use the system with ease thanks to the application's user-friendly layout.  There will be user guides to help users navigate the application.
+Performance: Indexing and paging strategies will be used to optimise the system for quick data retrieval, particularly for search queries.  Large datasets will be handled by effective algorithms, which will also increase system responsiveness.
+Safety: Passwords belonging to users will be safely kept by encryption.  Only admin users will be able to access sensitive information.  Restrictions on access and modification will be applied according to the responsibilities of the users (admin or guest).
 
-Data Description
+Data Description:
 
-Interface Design
+Interface Design:
 
-Work Plan
+Work Plan:
 Gantt chart
 
-LSEPI and Risk Assessment
+LSEPI and Risk Assessment:
 
-
-
-Peer Review
+Peer Review:
