@@ -23,13 +23,56 @@ Performance: Indexing and paging strategies will be used to optimise the system 
 Safety: Passwords belonging to users will be safely kept by encryption.  Only admin users will be able to access sensitive information.  Restrictions on access and modification will be applied according to the responsibilities of the users (admin or guest).
 
 Data Description:
+The database will contain the following tables:
+Bradford and Surrounding Townships
+
+· Surname, Forename, Address, Town, Regiment, Service Number, Enlistment Date, Discharge Date, Cemetery.
+
+Bradford Memorial
+
+· Surname, Forename, Memorial Title, Memorial Location, Memorial Info.
+
+Those buried in Bradford
+
+· Surname, Forename, Date of Death, Regiment, Cemetery
+
+Newspaper References
+
+· Surname, Forename, Newspaper Name, Date, Page/Column
+
+Biographies
+
+· Surname, Forename, Regiment, Biography attachment
 
 Interface Design:
+Login Screen
+Login area: Username and password input areas are located on the login screen. Buttons: Login button for authentication. Functionality: Both guest users and administrators can log in using their unique login information.
+
+Main Menu
+Options: Links to different parts (Townships, Newspapers, Biographies, Memorials, and Burials) via navigation page. Buttons: a button for users to log out.
+
+Search and Navigation
+A search box will allow users to search records based on various fields (surname, regiment, etc). Users will have an option to clear the search and return to the main records.
+
+Data Presentation
+Display: Data will be displayed in tables, with clear formatting for easy reading.
+Record Viewing: Users can view detailed information for each individual record and navigate between different records in the table.
 
 Work Plan:
 Gantt chart
 
 LSEPI and Risk Assessment:
+Legal issues
+The project must make sure that data protection laws, such as the General Data Protection Regulation (GDPR), are followed, especially when it comes to personal data, including names and addresses. To ensure that data is retained and shared legally, historical records should be handled with consideration for the privacy rights of any living descendants.
+
+Social issues
+By making historical records more easily accessible, the project offers the local community a valuable educational resource. It might also promote social interaction with local history and increase awareness of Bradford's involvement in World War One. The key to the data's social value is making sure it is accessible and available.
+
+Ethical issues
+Data integrity and accuracy must be the project's top ethical priorities. To prevent misrepresentation, all records should be checked and derived from reliable historical sources. The initiative should also continue to display data transparently, making sure that no important historical facts are left out or consumers are misled.
+
+Professional issues
+Professionally, the project must follow managing databases and web development best practices, which include guaranteeing data is safe and reliable. To ensure usability and performance for every user, testing should be done on a regular basis. To ensure future upgrades and maintenance, the team should adhere to ethical coding methods and maintain good documentation standards.
 
 Peer Review:
 Farhan - 9/10
