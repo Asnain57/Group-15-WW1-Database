@@ -1,0 +1,182 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bradford and Surrounding Townships</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 50%;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .footer-buttons {
+            margin-top: 20px;
+        }
+        .footer-buttons button {
+            margin: 0 10px;
+        }
+        .result-count {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bradford and Surrounding Townships</h1>
+
+        <div class="form-container">
+            <form method="POST">
+                <input type="text" name="search" placeholder="Search by surname or forename" value="{{ request.form['search'] if request.form.get('search') else '' }}" required>
+                <button type="submit">Search</button>
+                <button type="button" onclick="clearSearch()">Clear Data</button>
+            </form>
+        </div>
+
+        <!-- Number of Results -->
+        <div class="result-count">
+            <p>No. of search results: {{ results_count }}</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Surname</th>
+                        <th>Forename</th>
+                        <th>Address</th>
+                        <th>Electoral Ward</th>
+                        <th>Town</th>
+                        <th>Rank</th>
+                        <th>Regiment</th>
+                        <th>Unit</th>
+                        <th>Company</th>
+                        <th>Age</th>
+                        <th>Service No</th>
+                        <th>Other Regiment</th>
+                        <th>Other Unit</th>
+                        <th>Other Service No.</th>
+                        <th>Medals</th>
+                        <th>Enlistment Date</th>
+                        <th>Discharge Date</th>
+                        <th>Death Date</th>
+                        <th>Misc Info</th>
+                        <th>Cemetery/Memorial</th>
+                        <th>Cemetery Ref</th>
+                        <th>Cemetery Country</th>
+                        <th>CWGC Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                        <tr>
+                            <td>{{ record[1] }}</td>
+                            <td>{{ record[2] }}</td>
+                            <td>{{ record[3] }}</td>
+                            <td>{{ record[4] }}</td>
+                            <td>{{ record[5] }}</td>
+                            <td>{{ record[6] }}</td>
+                            <td>{{ record[7] }}</td>
+                            <td>{{ record[8] }}</td>
+                            <td>{{ record[9] }}</td>
+                            <td>{{ record[10] }}</td>
+                            <td>{{ record[11] }}</td>
+                            <td>{{ record[12] }}</td>
+                            <td>{{ record[13] }}</td>
+                            <td>{{ record[14] }}</td>
+                            <td>{{ record[15] }}</td>
+                            <td>{{ record[16] }}</td>
+                            <td>{{ record[17] }}</td>
+                            <td>{{ record[18] }}</td>
+                            <td>{{ record[19] }}</td>
+                            <td>{{ record[20] }}</td>
+                            <td>{{ record[21] }}</td>
+                            <td>{{ record[22] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="footer-buttons">
+            {% if previous_record %}
+                <a href="{{ url_for('townships', page=previous_record) }}">
+                    <button>Previous Record</button>
+                </a>
+            {% endif %}
+            {% if next_record %}
+                <a href="{{ url_for('townships', page=next_record) }}">
+                    <button>Next Record</button>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="footer-buttons">
+            <a href="{{ url_for('switchboard') }}">
+                <button>Close</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function clearSearch() {
+            document.querySelector('input[name="search"]').value = '';
+        }
+    </script>
+
+</body>
+</html>

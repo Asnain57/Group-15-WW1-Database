@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - W1 Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            position: relative;
+        }
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h1 {
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .open-db {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .open-db:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <img src="Mechanics_ww1 group logo.png" alt="Logo" class="logo"> 
+    <div class="login-container">
+        <h1>W1: Bradford and Surrounding Townships Database</h1>
+        <p>Enter password for required access type to log in.</p>
+        
+        <form action="/switchboard" method="POST">
+            <div class="input-group">
+                <label for="login-type">Select Login Type:</label>
+                <input type="radio" id="guest-login" name="login-type" value="guest" checked>
+                <label for="guest-login">Guest Login</label>
+                <input type="radio" id="admin-login" name="login-type" value="admin">
+                <label for="admin-login">Admin Login</label>
+            </div>
+
+            <div class="input-group" id="guest-password-group">
+                <label for="guest-password">Enter Guest Password</label>
+                <input type="password" id="guest-password" name="guest-password" placeholder="Enter Guest Password">
+            </div>
+
+            <div class="input-group" id="admin-password-group" style="display: none;">
+                <label for="admin-password">Enter Admin Password</label>
+                <input type="password" id="admin-password" name="admin-password" placeholder="Enter Admin Password">
+            </div>
+
+            <button type="submit" class="open-db">Open Database</button>
+        </form>
+    </div>
+
+    <script>
+        const guestLoginRadio = document.getElementById('guest-login');
+        const adminLoginRadio = document.getElementById('admin-login');
+        const guestPasswordGroup = document.getElementById('guest-password-group');
+        const adminPasswordGroup = document.getElementById('admin-password-group');
+
+        guestLoginRadio.addEventListener('change', () => {
+            guestPasswordGroup.style.display = 'block';
+            adminPasswordGroup.style.display = 'none';
+        });
+
+        adminLoginRadio.addEventListener('change', () => {
+            guestPasswordGroup.style.display = 'none';
+            adminPasswordGroup.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

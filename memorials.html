@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+    <h2 class="text-center mb-4">WW1 Memorial Records</h2>
+
+    <!-- Search Form -->
+    <form method="POST" class="mb-4 d-flex gap-2">
+        <div>
+            <label class="form-label">Search By:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="search_type" value="surname" checked>
+                <label class="form-check-label">Surname</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="search_type" value="forename">
+                <label class="form-check-label">Forename</label>
+            </div>
+        </div>
+        <div class="flex-grow-1">
+            <input type="text" name="search_query" class="form-control" placeholder="Enter Surname or Forename" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="/memorials" class="btn btn-secondary">Clear Data</a>  <!-- Clear Data Button -->
+    </form>
+
+    <!-- Search Results Count -->
+    {% if records %}
+        <p class="text-center">Showing {{ records|length }} results out of {{ results_count }} total records found.</p>
+    {% else %}
+        <p class="text-muted text-center">No records found.</p>
+    {% endif %}
+
+    <!-- Display Results -->
+    {% if records %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Surname</th>
+                    <th>Forename</th>
+                    <th>Memorial Title</th>
+                    <th>Memorial Location</th>
+                    <th>Memorial Info</th>
+                    <th>Post Code</th>
+                    <th>District</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record[1] }}</td> <!-- Surname -->
+                    <td>{{ record[2] }}</td> <!-- Forename -->
+                    <td>{{ record[3] }}</td> <!-- Memorial Title -->
+                    <td>{{ record[4] }}</td> <!-- Memorial Location -->
+                    <td>{{ record[5] }}</td> <!-- Memorial Info -->
+                    <td>{{ record[6] }}</td> <!-- Post Code -->
+                    <td>{{ record[7] }}</td> <!-- District -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between">
+        <div>
+            {% if previous_record %}
+                <a href="{{ url_for('memorials', page=previous_record) }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+        </div>
+        <div>
+            {% if next_record %}
+                <a href="{{ url_for('memorials', page=next_record) }}" class="btn btn-secondary">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Exit Button to Return to Switchboard -->
+    <div class="text-end mt-4">
+        <a href="/switchboard" class="btn btn-danger">Exit to Switchboard</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

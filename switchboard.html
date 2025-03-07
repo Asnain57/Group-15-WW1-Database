@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WW1 Database Switchboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            margin-top: 50px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .button {
+            display: block;
+            padding: 10px;
+            width: 80%;
+            margin: auto;
+            text-align: center;
+            font-size: 18px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .exit {
+            background-color: transparent; /* No background color */
+            color: #007BFF; /* Blue text color */
+            border: 1px solid #007BFF; /* Border around the button */
+            padding: 5px 15px;  /* Smaller padding */
+            font-size: 14px;  /* Smaller font size */
+            border-radius: 5px;
+            text-decoration: none;
+            position: fixed;  /* Use fixed positioning to keep it in the bottom-right corner */
+            bottom: 20px;  /* Distance from the bottom of the page */
+            right: 20px;   /* Distance from the right side of the page */
+            z-index: 10;  /* Ensure the button appears above other content */
+        }
+        .exit:hover {
+            color: white; /* White text on hover */
+            background-color: #007BFF; /* Blue background on hover */
+        }
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Database Options</h1>
+        <p>Select a database by clicking on it</p>
+
+        <div class="button-container">
+            <a href="{{ url_for('townships') }}" class="button" aria-label="View Bradford and Surrounding Townships Database">Bradford and Surrounding Townships</a>
+            <a href="{{ url_for('memorials') }}" class="button" aria-label="View Bradford Memorials Database">Bradford Memorials</a>
+            <a href="{{ url_for('burials') }}" class="button" aria-label="View Those Buried in Bradford Database">Those Buried in Bradford</a>
+            <a href="{{ url_for('newspaper') }}" class="button" aria-label="View Newspaper Index">Newspaper Index</a>
+            <a href="{{ url_for('biographies') }}" class="button" aria-label="View Biographies Database">Biographies</a>
+        </div>
+    </div>
+
+    <a href="{{ url_for('login') }}" class="exit" onclick="return confirm('Are you sure you want to exit?')">Exit</a>
+
+</body>
+</html>
