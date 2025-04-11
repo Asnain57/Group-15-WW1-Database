@@ -1,108 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - W1 Database</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WW1 Database Login</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            background: url('https://www.transparenttextures.com/patterns/linen.png'), #e8dcc3;
+            font-family: 'Spectral', serif;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
-            position: relative;
         }
+
+        .login-box {
+            background-color: #fefcf9;
+            border: 2px solid #d1bfa7;
+            border-radius: 12px;
+            padding: 60px 50px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            max-width: 640px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            font-size: 2.4em;
+            margin-bottom: 20px;
+            color: #4b3f2f;
+        }
+
+        .login-box p {
+            font-size: 1.3em;
+            color: #3f3f3f;
+            margin-bottom: 35px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #4a3a2a;
+        }
+
+        .input-group input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1em;
+            border: 2px solid #c4b28f;
+            border-radius: 6px;
+            background-color: #fffaf4;
+        }
+
+        .radio-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .radio-options label {
+            font-size: 1.2em;
+            color: #4a3a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-options input[type="radio"] {
+            transform: scale(1.4);
+        }
+
+        .submit-btn {
+            background-color: #6b4c3b;
+            color: white;
+            font-size: 1.3em;
+            padding: 14px 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #573c2f;
+        }
+
         .logo {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 100px;
+            top: 20px;
+            left: 20px;
+            width: 130px;
         }
-        .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .login-container h1 {
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .open-db {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .open-db:hover {
-            background: #0056b3;
+
+        @media (max-width: 600px) {
+            .login-box {
+                padding: 40px 25px;
+            }
+            .login-box h1 {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="Mechanics_ww1 group logo.png" alt="Logo" class="logo"> 
-    <div class="login-container">
-        <h1>W1: Bradford and Surrounding Townships Database</h1>
-        <p>Enter password for required access type to log in.</p>
-        
+    <img src="/images/WW1_Logo.png" alt="Logo" class="logo">
+    <div class="login-box">
+        <h1>WW1 Bradford Database</h1>
+        <p>Please select login type and enter your password.</p>
         <form action="/switchboard" method="POST">
-            <div class="input-group">
-                <label for="login-type">Select Login Type:</label>
-                <input type="radio" id="guest-login" name="login-type" value="guest" checked>
-                <label for="guest-login">Guest Login</label>
-                <input type="radio" id="admin-login" name="login-type" value="admin">
-                <label for="admin-login">Admin Login</label>
+            <div class="radio-options">
+                <label><input type="radio" name="login-type" value="guest" checked> Guest</label>
+                <label><input type="radio" name="login-type" value="admin"> Admin</label>
             </div>
 
             <div class="input-group" id="guest-password-group">
-                <label for="guest-password">Enter Guest Password</label>
-                <input type="password" id="guest-password" name="guest-password" placeholder="Enter Guest Password">
+                <label for="guest-password">Guest Password</label>
+                <input type="password" id="guest-password" name="guest-password">
             </div>
 
             <div class="input-group" id="admin-password-group" style="display: none;">
-                <label for="admin-password">Enter Admin Password</label>
-                <input type="password" id="admin-password" name="admin-password" placeholder="Enter Admin Password">
+                <label for="admin-password">Admin Password</label>
+                <input type="password" id="admin-password" name="admin-password">
             </div>
 
-            <button type="submit" class="open-db">Open Database</button>
+            <button type="submit" class="submit-btn">Open Database</button>
         </form>
     </div>
 
     <script>
-        const guestLoginRadio = document.getElementById('guest-login');
-        const adminLoginRadio = document.getElementById('admin-login');
-        const guestPasswordGroup = document.getElementById('guest-password-group');
-        const adminPasswordGroup = document.getElementById('admin-password-group');
+        const radios = document.getElementsByName("login-type");
+        const guestGroup = document.getElementById("guest-password-group");
+        const adminGroup = document.getElementById("admin-password-group");
 
-        guestLoginRadio.addEventListener('change', () => {
-            guestPasswordGroup.style.display = 'block';
-            adminPasswordGroup.style.display = 'none';
-        });
-
-        adminLoginRadio.addEventListener('change', () => {
-            guestPasswordGroup.style.display = 'none';
-            adminPasswordGroup.style.display = 'block';
+        radios.forEach(radio => {
+            radio.addEventListener("change", () => {
+                if (radio.value === "guest") {
+                    guestGroup.style.display = "block";
+                    adminGroup.style.display = "none";
+                } else {
+                    guestGroup.style.display = "none";
+                    adminGroup.style.display = "block";
+                }
+            });
         });
     </script>
 </body>

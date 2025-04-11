@@ -1,15 +1,15 @@
 #import libraries
-import sqlite3
-import pandas as pd
-import os
-from flask import Flask, request, render_template, redirect, url_for, session
+import sqlite3  # For interacting with SQLite databases
+import pandas as pd  # For working with Excel files
+import os  # For handling file paths and directories
+from flask import Flask, request, render_template, redirect, url_for, session  # Flask web framework imports
 
-app = Flask(__name__)
-app.secret_key = 'supersecretkey'
+app = Flask(__name__)  # Initialize the Flask web application
+app.secret_key = 'supersecretkey'  # Secret key for session management in Flask
 
 def init_db():
     """Initialize the SQLite database, creating necessary tables if they do not exist."""
-    conn = sqlite3.connect('bradford_ww1.db') # Connect to SQLite database
+    conn = sqlite3.connect('bradford_ww1.db')  # Connect to SQLite database
     cursor = conn.cursor()
 
     # Create the WW1 records tables if they do not exist
@@ -113,7 +113,7 @@ def load_spreadsheets():
     # Loop through each spreadsheet and load data into respective tables
     for table, file in spreadsheets.items():
         file_path = os.path.join(folder_path, file)
-        if os.path.exists(file_path):
+        if os.path.exists(file_path):  # Check if file exists
             df = pd.read_excel(file_path)  # Read Excel file into DataFrame
 
             # Ensure the dataframe columns are aligned correctly (case sensitive, etc.)
@@ -137,7 +137,7 @@ def login():
         user = cursor.fetchone()  # Check if user exists with the given credentials
         conn.close()
 
-        if user:
+        if user:  # If user found, save the session and redirect to switchboard
             session['user'] = username  # Save user session
             return redirect(url_for('switchboard'))  # Redirect to switchboard
         return "Login Failed"
@@ -169,99 +169,201 @@ def switchboard():
 
 @app.route('/townships', methods=['GET', 'POST'])
 def townships():
-    """Display and search townships records."""
-    page = request.args.get('page', 1, type=int)  # Get the current page number
-    search_term = request.form['search'] if request.method == 'POST' else ''  # Get search term if POST request
-
-    conn = sqlite3.connect('bradford_ww1.db')  # Connect to the database
+    """Display and search townships records with pagination."""
+    conn = sqlite3.connect('bradford_ww1.db')
     cursor = conn.cursor()
 
-    # Search query with pagination (limit 10 records per page)
-    cursor.execute('SELECT * FROM townships WHERE surname LIKE ? OR forename LIKE ? LIMIT ? OFFSET ?',
-                   ('%' + search_term + '%', '%' + search_term + '%', 10, (page - 1) * 10))
+    page = request.args.get('page', 1, type=int)  # Get the current page number, default is 1
+    records_per_page = 10  # Number of records per page
+    offset = (page - 1) * records_per_page  # Calculate offset for pagination
+
+    # Default query to fetch all records
+    query = "SELECT * FROM townships LIMIT ? OFFSET ?"
+    count_query = "SELECT COUNT(*) FROM townships"
+    params = (records_per_page, offset)
+    
+    search_query = ''
+    search_type = ''
+
+    # Handle search functionality
+    if request.method == 'POST':
+        search_type = request.form.get('search_type')  # e.g., 'surname', 'forename'
+        search_query = request.form.get('search_query', '').strip()
+
+        if search_query:  # If search_query is not empty
+            query = f"SELECT * FROM townships WHERE {search_type} LIKE ? LIMIT ? OFFSET ?"
+            count_query = f"SELECT COUNT(*) FROM townships WHERE {search_type} LIKE ?"
+            params = ('%' + search_query + '%', records_per_page, offset)
+        else:
+            # If search_query is empty, show all records
+            search_query = ''
+
+    cursor.execute(count_query, ('%' + search_query + '%',) if search_query else ())
+    total_records = cursor.fetchone()[0]  # Get total number of records
+
+    cursor.execute(query, params)
     records = cursor.fetchall()
+    conn.close()
 
-    cursor.execute('SELECT COUNT(*) FROM townships WHERE surname LIKE ? OR forename LIKE ?',
-                   ('%' + search_term + '%', '%' + search_term + '%'))
-    results_count = cursor.fetchone()[0]  # Get the total number of results
+    # Determine Next and Previous pages
+    next_page = page + 1 if offset + records_per_page < total_records else None
+    previous_page = page - 1 if page > 1 else None
 
-    # Pagination logic
-    next_record = page + 1 if page * 10 < results_count else None
-    previous_record = page - 1 if page > 1 else None
-
-    conn.close()  # Close the database connection
-
-    return render_template('townships.html', records=records, results_count=results_count,
-                           next_record=next_record, previous_record=previous_record)
+    return render_template('townships.html', records=records, page=page, 
+                           next_page=next_page, previous_page=previous_page, 
+                           search_query=search_query, search_type=search_type, total_results=total_records)
 
 
 @app.route('/memorials', methods=['GET', 'POST'])
 def memorials():
-    """Display and search memorial records."""
+    """Display and search memorial records with pagination."""
     conn = sqlite3.connect('bradford_ww1.db')
     cursor = conn.cursor()
 
-    query = "SELECT * FROM memorials"  # Default query to fetch all records
-    search_query = ''  # Initialize search query
+    page = request.args.get('page', 1, type=int)  # Get the current page number, default is 1
+    records_per_page = 10  # Number of records per page
+    offset = (page - 1) * records_per_page  # Calculate offset for pagination
+
+    # Default query to fetch all records
+    query = "SELECT * FROM memorials LIMIT ? OFFSET ?"
+    count_query = "SELECT COUNT(*) FROM memorials"
+    params = (records_per_page, offset)
     
+    search_query = ''
+    search_type = ''
+
+    # Handle search functionality
     if request.method == 'POST':
-        search_type = request.form.get('search_type')  # Get search type (e.g., surname, forename, etc.)
-        search_query = request.form.get('search_query')  # Get the search query from the form
+        search_type = request.form.get('search_type')  # e.g., 'surname', 'forename', 'memorial_location'
+        search_query = request.form.get('search_query', '').strip()
 
-        # Modify the query based on the search type
-        if search_type == 'surname':
-            query = "SELECT * FROM memorials WHERE surname LIKE ?"
-        elif search_type == 'forename':
-            query = "SELECT * FROM memorials WHERE forename LIKE ?"
-        elif search_type == 'memorial_location':
-            query = "SELECT * FROM memorials WHERE memorial_location LIKE ?"
+        if search_query:  # If search_query is not empty
+            query = f"SELECT * FROM memorials WHERE {search_type} LIKE ? LIMIT ? OFFSET ?"
+            count_query = f"SELECT COUNT(*) FROM memorials WHERE {search_type} LIKE ?"
+            params = ('%' + search_query + '%', records_per_page, offset)
+        else:
+            # If search_query is empty, show all records
+            search_query = ''
 
-        cursor.execute(query, ('%' + search_query + '%',))  # Execute the query with the search term
-    else:
-        cursor.execute(query)  # If no search, fetch all records
+    cursor.execute(count_query, ('%' + search_query + '%',) if search_query else ())
+    total_records = cursor.fetchone()[0]  # Get total number of records
 
-    records = cursor.fetchall()  # Fetch all results from the query
+    cursor.execute(query, params)
+    records = cursor.fetchall()
     conn.close()
 
-    return render_template('memorials.html', records=records)  # Render the memorials page with results
+    # Determine Next and Previous pages
+    next_page = page + 1 if offset + records_per_page < total_records else None
+    previous_page = page - 1 if page > 1 else None
+
+    return render_template('memorials.html', records=records, page=page, 
+                           next_page=next_page, previous_page=previous_page, 
+                           search_query=search_query, search_type=search_type, total_results=total_records)
 
 
 @app.route('/burials', methods=['GET', 'POST'])
 def burials():
-    """Display and search burial records."""
-    if 'user' in session:  # Check if user is logged in
-        conn = sqlite3.connect('bradford_ww1.db')
-        cursor = conn.cursor()
+    """Display and search burial records with pagination."""
+    if 'user' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if not logged in
 
-        if request.method == 'POST':
-            search_term = request.form['search']
-            cursor.execute("SELECT * FROM burials WHERE surname LIKE ? OR forename LIKE ?", ('%' + search_term + '%', '%' + search_term + '%'))
-        else:
-            cursor.execute("SELECT * FROM burials")
-        
-        records = cursor.fetchall()  # Fetch burial records
-        conn.close()
-        return render_template('burials.html', records=records)  # Render burials page with results
-    return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+    conn = sqlite3.connect('bradford_ww1.db')
+    cursor = conn.cursor()
+
+    page = request.args.get('page', 1, type=int)
+    records_per_page = 10
+    offset = (page - 1) * records_per_page
+
+    query = "SELECT * FROM burials LIMIT ? OFFSET ?"
+    count_query = "SELECT COUNT(*) FROM burials"
+    params = (records_per_page, offset)
+
+    search_query = ''
+    search_type = ''
+
+    # Handle search functionality
+    if request.method == 'POST':
+        search_type = request.form.get('search_type')  # 'surname' or 'forename'
+        search_query = request.form.get('search_query', '').strip()
+
+        if search_query:
+            query = f"SELECT * FROM burials WHERE {search_type} LIKE ? LIMIT ? OFFSET ?"
+            count_query = f"SELECT COUNT(*) FROM burials WHERE {search_type} LIKE ?"
+            params = ('%' + search_query + '%', records_per_page, offset)
+
+    cursor.execute(count_query, ('%' + search_query + '%',) if search_query else ())
+    total_records = cursor.fetchone()[0]  # Get total number of records
+
+    cursor.execute(query, params)
+    records = cursor.fetchall()
+    conn.close()
+
+    # Determine Next and Previous pages
+    next_page = page + 1 if offset + records_per_page < total_records else None
+    previous_page = page - 1 if page > 1 else None
+
+    return render_template(
+        'burials.html',
+        records=records,
+        page=page,
+        next_page=next_page,
+        previous_page=previous_page,
+        search_query=search_query,
+        search_type=search_type,
+        total_results=total_records
+    )
 
 
 @app.route('/newspaper', methods=['GET', 'POST'])
 def newspaper():
-    """Display and search newspaper records."""
-    if 'user' in session:  # Check if user is logged in
-        conn = sqlite3.connect('bradford_ww1.db')
-        cursor = conn.cursor()
+    """Display and search newspaper records with pagination."""
+    conn = sqlite3.connect('bradford_ww1.db')
+    cursor = conn.cursor()
 
-        if request.method == 'POST':
-            search_term = request.form['search']
-            cursor.execute("SELECT * FROM newspapers WHERE surname LIKE ? OR forename LIKE ?", ('%' + search_term + '%', '%' + search_term + '%'))
-        else:
-            cursor.execute("SELECT * FROM newspapers")
-        
-        records = cursor.fetchall()  # Fetch newspaper records
-        conn.close()
-        return render_template('newspaper.html', records=records)  # Render newspaper page with results
-    return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+    page = request.args.get('page', 1, type=int)
+    records_per_page = 10
+    offset = (page - 1) * records_per_page
+
+    # Default query and params
+    query = "SELECT * FROM newspapers LIMIT ? OFFSET ?"
+    count_query = "SELECT COUNT(*) FROM newspapers"
+    params = (records_per_page, offset)
+
+    search_query = ''
+    search_type = ''
+
+    # Handle search functionality
+    if request.method == 'POST':
+        search_type = request.form.get('search_type')  # Field to search (e.g., surname, rank, etc.)
+        search_query = request.form.get('search_query', '').strip()
+
+        if search_query:
+            query = f"SELECT * FROM newspapers WHERE {search_type} LIKE ? LIMIT ? OFFSET ?"
+            count_query = f"SELECT COUNT(*) FROM newspapers WHERE {search_type} LIKE ?"
+            params = ('%' + search_query + '%', records_per_page, offset)
+
+    # Execute count and data query
+    cursor.execute(count_query, ('%' + search_query + '%',) if search_query else ())
+    total_records = cursor.fetchone()[0]  # Get total number of records
+
+    cursor.execute(query, params)
+    records = cursor.fetchall()
+    conn.close()
+
+    # Pagination logic
+    next_page = page + 1 if offset + records_per_page < total_records else None
+    previous_page = page - 1 if page > 1 else None
+
+    return render_template(
+        'newspaper.html',
+        records=records,
+        page=page,
+        next_page=next_page,
+        previous_page=previous_page,
+        search_query=search_query,
+        search_type=search_type,
+        total_results=total_records
+    )
 
 
 @app.route('/biographies', methods=['GET', 'POST'])
@@ -272,10 +374,10 @@ def biographies():
         cursor = conn.cursor()
 
         if request.method == 'POST':
-            search_term = request.form['search']
+            search_term = request.form['search']  # Search term input from the user
             cursor.execute("SELECT * FROM biographies WHERE surname LIKE ? OR forename LIKE ?", ('%' + search_term + '%', '%' + search_term + '%'))
         else:
-            cursor.execute("SELECT * FROM biographies")
+            cursor.execute("SELECT * FROM biographies")  # If no search term, fetch all records
         
         records = cursor.fetchall()  # Fetch biography records
         conn.close()

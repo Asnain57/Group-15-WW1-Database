@@ -3,44 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memorials</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Memorials - Admin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&display=swap');
+
+        body {
+            background: url('https://www.transparenttextures.com/patterns/linen.png'), #e8dcc3;
+            font-family: 'Spectral', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #fefcf9;
+            border: 2px solid #d1bfa7;
+            border-radius: 12px;
+            padding: 30px 40px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 2.4em;
+            color: #4b3f2f;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #3f3f3f;
+        }
+
+        .form-control {
+            padding: 10px;
+            font-size: 1.1em;
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #d1bfa7;
+            margin-bottom: 20px;
+        }
+
+        .btn-custom, .btn-secondary, .exit {
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: 0.3s ease;
+        }
+
+        .btn-custom {
+            background-color: #6b4c3b;
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #573c2f;
+            transform: scale(1.03);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #6b4c3b;
+            border: 2px solid #6b4c3b;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6b4c3b;
+            color: white;
+        }
+
+        .table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            border: 1px solid #d1bfa7;
+        }
+
+        .table th {
+            background-color: #6b4c3b;
+            color: white;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            color: #6b4c3b;
+            padding: 8px 15px;
+            border: 1px solid #6b4c3b;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #6b4c3b;
+            color: white;
+        }
+
+        .exit {
+            background-color: transparent;
+            color: #6b4c3b;
+            border: 2px solid #6b4c3b;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .exit:hover {
+            background-color: #6b4c3b;
+            color: white;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                margin: 40px 10px;
+                padding: 40px 20px;
+            }
+        }
+    </style>
 </head>
-<body class="container mt-4">
+<body>
+    <div class="container">
+        <h2>WW1 Memorial Records</h2>
 
-    <h2 class="text-center mb-4">WW1 Memorial Records</h2>
+        {% if is_admin %}
+        <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('add_memorial') }}" class="btn-custom">Add New Memorial</a>
+        </div>
+        {% endif %}
 
-    <!-- Search Form -->
-    <form method="POST" class="mb-4 d-flex gap-2">
-        <div>
+        <form method="POST">
             <label class="form-label">Search By:</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="search_type" value="surname" checked>
-                <label class="form-check-label">Surname</label>
+            <div>
+                <label><input type="radio" name="search_type" value="surname" {% if search_type == 'surname' %}checked{% endif %} onchange="changePlaceholder()"> Surname</label>
+                <label><input type="radio" name="search_type" value="forename" {% if search_type == 'forename' %}checked{% endif %} onchange="changePlaceholder()"> Forename</label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="search_type" value="forename">
-                <label class="form-check-label">Forename</label>
-            </div>
-        </div>
-        <div class="flex-grow-1">
-            <input type="text" name="search_query" class="form-control" placeholder="Enter Surname or Forename" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a href="/memorials" class="btn btn-secondary">Clear Data</a>  <!-- Clear Data Button -->
-    </form>
+            <input type="text" name="search_query" class="form-control" id="searchQuery" placeholder="Enter Surname" value="{{ search_query }}" required>
+            <button type="submit" class="btn-custom">Search</button>
+            <a href="/memorials" class="btn-secondary">Clear Data</a>
+        </form>
 
-    <!-- Search Results Count -->
-    {% if records %}
-        <p class="text-center">Showing {{ records|length }} results out of {{ results_count }} total records found.</p>
-    {% else %}
-        <p class="text-muted text-center">No records found.</p>
-    {% endif %}
-
-    <!-- Display Results -->
-    {% if records %}
+        {% if records %}
+        <p><strong>No. of search results:</strong> {{ total_results }}</p>
         <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+            <thead>
                 <tr>
                     <th>Surname</th>
                     <th>Forename</th>
@@ -49,43 +179,52 @@
                     <th>Memorial Info</th>
                     <th>Post Code</th>
                     <th>District</th>
+                    {% if is_admin %}<th>Actions</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for record in records %}
                 <tr>
-                    <td>{{ record[1] }}</td> <!-- Surname -->
-                    <td>{{ record[2] }}</td> <!-- Forename -->
-                    <td>{{ record[3] }}</td> <!-- Memorial Title -->
-                    <td>{{ record[4] }}</td> <!-- Memorial Location -->
-                    <td>{{ record[5] }}</td> <!-- Memorial Info -->
-                    <td>{{ record[6] }}</td> <!-- Post Code -->
-                    <td>{{ record[7] }}</td> <!-- District -->
+                    <td>{{ record[1] }}</td>
+                    <td>{{ record[2] }}</td>
+                    <td>{{ record[3] }}</td>
+                    <td>{{ record[4] }}</td>
+                    <td>{{ record[5] }}</td>
+                    <td>{{ record[6] }}</td>
+                    <td>{{ record[7] }}</td>
+                    {% if is_admin %}
+                    <td>
+                        <a href="{{ url_for('edit_memorial', memorial_id=record[0]) }}" class="btn-secondary">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_memorial', memorial_id=record[0]) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                            <button type="submit" class="btn-custom">Delete</button>
+                        </form>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    {% endif %}
 
-    <!-- Pagination Controls -->
-    <div class="d-flex justify-content-between">
-        <div>
-            {% if previous_record %}
-                <a href="{{ url_for('memorials', page=previous_record) }}" class="btn btn-secondary">Previous</a>
+        <div class="pagination">
+            {% if previous_page %}
+                <a href="{{ url_for('memorials', page=previous_page) }}">&laquo; Previous</a>
+            {% endif %}
+            {% if next_page %}
+                <a href="{{ url_for('memorials', page=next_page) }}">Next &raquo;</a>
             {% endif %}
         </div>
-        <div>
-            {% if next_record %}
-                <a href="{{ url_for('memorials', page=next_record) }}" class="btn btn-secondary">Next</a>
-            {% endif %}
-        </div>
+        {% else %}
+        <p class="text-muted">No records found.</p>
+        {% endif %}
     </div>
 
-    <!-- Exit Button to Return to Switchboard -->
-    <div class="text-end mt-4">
-        <a href="/switchboard" class="btn btn-danger">Exit to Switchboard</a>
-    </div>
+    <a href="/switchboard" class="exit">Exit to Switchboard</a>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changePlaceholder() {
+            var input = document.getElementById('searchQuery');
+            input.placeholder = document.getElementById('surname').checked ? 'Enter Surname' : 'Enter Forename';
+        }
+    </script>
 </body>
 </html>

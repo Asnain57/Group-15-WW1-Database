@@ -1,79 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>WW1 Database Switchboard</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: url('https://www.transparenttextures.com/patterns/linen.png'), #e8dcc3;
+            font-family: 'Spectral', serif;
+            margin: 0;
+            padding: 0;
             text-align: center;
         }
+
         .container {
-            width: 60%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            margin-top: 50px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: 80px auto;
+            background-color: #fefcf9;
+            border: 2px solid #d1bfa7;
+            border-radius: 12px;
+            padding: 60px 40px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
+
         h1 {
-            color: #333;
+            font-size: 2.4em;
+            color: #4b3f2f;
+            margin-bottom: 10px;
         }
+
+        p {
+            font-size: 1.3em;
+            color: #3f3f3f;
+            margin-bottom: 30px;
+        }
+
         .button-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            margin-top: 20px;
         }
+
         .button {
-            display: block;
-            padding: 10px;
-            width: 80%;
-            margin: auto;
-            text-align: center;
-            font-size: 18px;
+            background-color: #6b4c3b;
             color: white;
-            background-color: #007BFF;
+            padding: 16px;
+            font-size: 1.2em;
+            font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             text-decoration: none;
-            transition: 0.3s;
+            transition: 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
+
         .button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+            background-color: #573c2f;
+            transform: scale(1.03);
         }
+
         .exit {
-            background-color: transparent; /* No background color */
-            color: #007BFF; /* Blue text color */
-            border: 1px solid #007BFF; /* Border around the button */
-            padding: 5px 15px;  /* Smaller padding */
-            font-size: 14px;  /* Smaller font size */
+            background-color: transparent;
+            color: #6b4c3b;
+            border: 2px solid #6b4c3b;
+            padding: 8px 18px;
+            font-size: 1em;
+            font-weight: bold;
             border-radius: 5px;
             text-decoration: none;
-            position: fixed;  /* Use fixed positioning to keep it in the bottom-right corner */
-            bottom: 20px;  /* Distance from the bottom of the page */
-            right: 20px;   /* Distance from the right side of the page */
-            z-index: 10;  /* Ensure the button appears above other content */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            transition: 0.2s;
         }
+
         .exit:hover {
-            color: white; /* White text on hover */
-            background-color: #007BFF; /* Blue background on hover */
+            background-color: #6b4c3b;
+            color: white;
         }
+
         @media screen and (max-width: 768px) {
             .container {
-                width: 90%;
-            }
-
-            .button-container {
-                flex-direction: column;
+                margin: 40px 10px;
+                padding: 40px 20px;
             }
 
             .button {
-                width: 100%;
+                font-size: 1.1em;
+                padding: 14px;
             }
         }
     </style>
@@ -81,11 +98,11 @@
 <body>
 
     <div class="container">
-        <h1>Database Options</h1>
-        <p>Select a database by clicking on it</p>
+        <h1>WW1 Bradford Database</h1>
+        <p>Select one of the databases below to view records</p>
 
         <div class="button-container">
-            <a href="{{ url_for('townships') }}" class="button" aria-label="View Bradford and Surrounding Townships Database">Bradford and Surrounding Townships</a>
+            <a href="{{ url_for('townships') }}" class="button" aria-label="View Bradford and Surrounding Townships Database">Bradford & Surrounding Townships</a>
             <a href="{{ url_for('memorials') }}" class="button" aria-label="View Bradford Memorials Database">Bradford Memorials</a>
             <a href="{{ url_for('burials') }}" class="button" aria-label="View Those Buried in Bradford Database">Those Buried in Bradford</a>
             <a href="{{ url_for('newspaper') }}" class="button" aria-label="View Newspaper Index">Newspaper Index</a>
